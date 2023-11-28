@@ -7,7 +7,7 @@ namespace TestPlagiarismCA
     {
         private static void Main()
         {
-            string testPath = @"C:\Users\Whiteboy\Desktop\Engineer Project\Plagiarisms";
+            string testPath = @"C:\Users\Admin\Desktop\Plagiarisms";
             List<string> filePaths = Directory.GetFiles(testPath, "*.cs").ToList();
 
             string newestFilePath = Utility.FindNewestFile(filePaths);
