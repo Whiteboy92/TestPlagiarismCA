@@ -1,23 +1,31 @@
-﻿namespace TestPlagiarismCA.Shared;
+﻿namespace TestPlagiarismCA.CSharpDetection;
 
-public static class PlagiarismDetection
+public class CSharpPlagiarismDetection
 {
-    internal static void CompareFilesWithNewest(string newestFilePath, List<string> filePaths)
+    public double CompareFilesWithNewest(string newestFilePath, List<string> filePaths)
     {
         const double plagiarizedMethodThreshold = 0.8d;
+        List<double> plagiarismPercentages = new List<double>();
 
         string newestFileContent = File.ReadAllText(newestFilePath);
-        Dictionary<string, List<string>> methodTokens = Tokenization.TokenizeMethods(newestFileContent);
+        Dictionary<string, List<string>> methodTokens = CSharpTokenization.TokenizeMethods(newestFileContent);
 
         Parallel.ForEach(filePaths.Where(path => path != newestFilePath), filePath =>
         {
             string content = File.ReadAllText(filePath);
-            Dictionary<string, List<string>> otherMethodTokens = Tokenization.TokenizeMethods(content);
+            Dictionary<string, List<string>> otherMethodTokens = CSharpTokenization.TokenizeMethods(content);
 
             double plagiarismPercentage = CalculatePlagiarismPercentage(methodTokens, otherMethodTokens, plagiarizedMethodThreshold);
 
+            plagiarismPercentages.Add(plagiarismPercentage);
             Console.WriteLine($"File {Path.GetFileName(filePath)} is {plagiarismPercentage * 100:F2}% plagiarized by {Path.GetFileName(newestFilePath)}");
         });
+
+        // Calculate the overall plagiarism percentage
+        double totalPlagiarism = plagiarismPercentages.Sum();
+        double overallPlagiarismPercentage = totalPlagiarism / plagiarismPercentages.Count;
+
+        return overallPlagiarismPercentage;
     }
         
     private static double CalculatePlagiarismPercentage(Dictionary<string, List<string>> newestMethodTokens,

@@ -9,6 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="ClangSharp" Version="16.0.0" />
+      <PackageReference Include="ClangSharp.Interop" Version="16.0.0" />
+      <PackageReference Include="libClangSharp" Version="16.0.6" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
     </ItemGroup>
 
